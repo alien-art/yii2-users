@@ -1,8 +1,8 @@
 <?php
 
-namespace budyaga\users\components;
+namespace alien\users\components;
 
-use budyaga\users\models\UserOauthKey;
+use alien\users\models\UserOauthKey;
 use yii\authclient\widgets\AuthChoice;
 use yii\base\InvalidConfigException;
 use Yii;

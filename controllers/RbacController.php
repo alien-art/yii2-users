@@ -1,10 +1,10 @@
 <?php
 
-namespace budyaga\users\controllers;
+namespace alien\users\controllers;
 
-use budyaga\users\models\AuthItemSearch;
-use budyaga\users\models\AuthRuleSearch;
-use budyaga\users\models\forms\AssignmentForm;
+use alien\users\models\AuthItemSearch;
+use alien\users\models\AuthRuleSearch;
+use alien\users\models\forms\AssignmentForm;
 use Yii;
 use yii\rbac\Item;
 use yii\web\NotFoundHttpException;
@@ -55,7 +55,7 @@ class RbacController extends Controller
 
     public function actionCreate($type = null)
     {
-        $className = 'budyaga\\users\\models\\' . $this->getModelName($type);
+        $className = 'alien\\users\\models\\' . $this->getModelName($type);
         $model = new $className;
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
@@ -86,7 +86,7 @@ class RbacController extends Controller
 
     public function actionUpdate($id, $type)
     {
-        $className = 'budyaga\\users\\models\\' . $this->getModelName($type);
+        $className = 'alien\\users\\models\\' . $this->getModelName($type);
         $model = $this->findModel($id, $className);
         $auth = Yii::$app->authManager;
 
@@ -131,7 +131,7 @@ class RbacController extends Controller
     public function actionChildren($id, $type)
     {
         $modelForm = new AssignmentForm;
-        $modelForm->model = $this->findModel($id, 'budyaga\\users\\models\\AuthItem');
+        $modelForm->model = $this->findModel($id, 'alien\\users\\models\\AuthItem');
         $modelForm->target = $this->findAuthEntity($id, $type);
 
         if ($modelForm->load(Yii::$app->request->post()) && $modelForm->save()) {

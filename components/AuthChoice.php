@@ -1,6 +1,6 @@
 <?php
 
-namespace budyaga\users\components;
+namespace alien\users\components;
 
 use yii\base\InvalidConfigException;
 use yii\base\Widget;

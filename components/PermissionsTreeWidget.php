@@ -1,8 +1,8 @@
 <?php
 
-namespace budyaga\users\components;
+namespace alien\users\components;
 
-use budyaga\users\models\AuthItem;
+use alien\users\models\AuthItem;
 use yii\base\Widget;
 use Yii;
 

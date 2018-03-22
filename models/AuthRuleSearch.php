@@ -1,14 +1,14 @@
 <?php
 
-namespace budyaga\users\models;
+namespace alien\users\models;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use budyaga\users\models\AuthRule;
+use alien\users\models\AuthRule;
 
 /**
- * AuthRuleSearch represents the model behind the search form about `budyaga\users\models\AuthRule`.
+ * AuthRuleSearch represents the model behind the search form about `alien\users\models\AuthRule`.
  */
 class AuthRuleSearch extends AuthRule
 {

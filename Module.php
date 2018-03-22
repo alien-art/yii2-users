@@ -1,12 +1,12 @@
 <?php
 
-namespace budyaga\users;
+namespace alien\users;
 
 use Yii;
 
 class Module extends \yii\base\Module
 {
-    public $controllerNamespace = 'budyaga\users\controllers';
+    public $controllerNamespace = 'alien\users\controllers';
 
     public $userPhotoUrl = '';
 
@@ -28,7 +28,7 @@ class Module extends \yii\base\Module
         if (!isset(Yii::$app->i18n->translations['users']) && !isset(Yii::$app->i18n->translations['users/*'])) {
             Yii::$app->i18n->translations['users'] = [
                 'class' => 'yii\i18n\PhpMessageSource',
-                'basePath' => '@budyaga/users/messages',
+                'basePath' => '@alien/users/messages',
                 'forceTranslation' => true,
                 'fileMap' => [
                     'users' => 'users.php'
@@ -51,7 +51,7 @@ class Module extends \yii\base\Module
         if (isset($this->customMailViews[$default])) {
             return $this->customMailViews[$default];
         } else {
-            return '@budyaga/users/mail/' . $default;
+            return '@alien/users/mail/' . $default;
         }
     }
 }

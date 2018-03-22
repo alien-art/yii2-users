@@ -1,6 +1,6 @@
 <?php
 
-namespace budyaga\users\models;
+namespace alien\users\models;
 
 use Yii;
 use yii\base\NotSupportedException;

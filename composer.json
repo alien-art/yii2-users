@@ -1,5 +1,5 @@
 {
-    "name": "budyaga/yii2-users",
+    "name": "alien-art/yii2-users",
     "description": "Module for manage users and their rights with the support of registration through social services and assigned to each user more than one social service.",
     "type": "yii2-extension",
     "keywords": ["yii2","extension","users","module","oauth","rbac"],
@@ -7,17 +7,21 @@
     "authors": [
         {
             "name": "Sergey Krivochenko",
-            "email": "budyaga@gmail.com"
+            "email": "alien@gmail.com"
+        },
+        {
+            "name": "Alien-art",
+            "email": "alien@alien-art.ru"
         }
     ],
     "require": {
         "yiisoft/yii2": "*",
 		"yiisoft/yii2-authclient": "*",
-        "budyaga/yii2-cropper": "*"
+        "alien/yii2-cropper": "*"
     },
     "autoload": {
         "psr-4": {
-            "budyaga\\users\\": ""
+            "alien\\users\\": ""
         }
     }
 }

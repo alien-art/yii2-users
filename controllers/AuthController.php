@@ -1,9 +1,9 @@
 <?php
 
-namespace budyaga\users\controllers;
+namespace alien\users\controllers;
 
-use budyaga\users\models\User;
-use budyaga\users\models\UserOauthKey;
+use alien\users\models\User;
+use alien\users\models\UserOauthKey;
 use Yii;
 
 class AuthController extends \yii\web\Controller

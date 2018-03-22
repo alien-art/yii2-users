@@ -1,9 +1,9 @@
 <?php
 
-namespace budyaga\users\components\oauth;
+namespace alien\users\components\oauth;
 
-use budyaga\users\models\User;
-use budyaga\users\models\UserOauthKey;
+use alien\users\models\User;
+use alien\users\models\UserOauthKey;
 
 class GitHub extends \yii\authclient\clients\GitHub
 {
