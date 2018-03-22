@@ -1,5 +1,5 @@
 {
-    "name": "alien-art/yii2-users",
+    "name": "alien/yii2-users",
     "description": "Module for manage users and their rights with the support of registration through social services and assigned to each user more than one social service.",
     "type": "yii2-extension",
     "keywords": ["yii2","extension","users","module","oauth","rbac"],
@@ -7,7 +7,7 @@
     "authors": [
         {
             "name": "Sergey Krivochenko",
-            "email": "alien@gmail.com"
+            "email": "budyaga@gmail.com"
         },
         {
             "name": "Alien-art",

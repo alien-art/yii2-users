@@ -16,6 +16,8 @@ class Module extends \yii\base\Module
 
     public $customMailViews = [];
 
+    public $loginLayout = '';
+
     public function init()
     {
         parent::init();

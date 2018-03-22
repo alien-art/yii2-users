@@ -34,11 +34,14 @@ class UserController extends \yii\web\Controller
             return $this->goHome();
         }
 
+        if(isset(Yii::$app->controller->module->loginLayout))
+            $this->layout = Yii::$app->controller->module->loginLayout;
+        
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
         } else {
-            return $this->render($this->module->getCustomView('login'), [
+            return $this->render('login', [
                 'model' => $model,
             ]);
         }
