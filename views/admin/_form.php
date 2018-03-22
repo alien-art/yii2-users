@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use alien\cropper\Widget;
+use budyaga\cropper\Widget;
 use alien\users\models\User;
 use yii\helpers\Url;
 

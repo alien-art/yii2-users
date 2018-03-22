@@ -2,7 +2,7 @@
 use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
 use yii\helpers\Url;
-use alien\cropper\Widget;
+use budyaga\cropper\Widget;
 use alien\users\models\User;
 use alien\users\components\AuthKeysManager;
 use alien\users\UsersAsset;

@@ -21,7 +21,7 @@ class UserController extends \yii\web\Controller
     {
         return [
             'uploadPhoto' => [
-                'class' => 'alien\cropper\actions\UploadAction',
+                'class' => 'budyaga\cropper\actions\UploadAction',
                 'url' => Yii::$app->controller->module->userPhotoUrl,
                 'path' => Yii::$app->controller->module->userPhotoPath,
             ]
