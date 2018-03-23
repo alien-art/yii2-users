@@ -2,6 +2,8 @@
 
 namespace alien\users\controllers;
 
+use alien\users\models\AccountForm;
+use alien\users\models\forms\UserForm;
 use Yii;
 use alien\users\models\User;
 use yii\data\ActiveDataProvider;
@@ -27,7 +29,7 @@ class AdminController extends Controller
                     'delete' => ['post'],
                 ],
             ],
-            'access' => [
+            /*'access' => [
                 'class' => AccessControl::className(),
                 'only' => ['index', 'create', 'view', 'update', 'delete', 'permissions'],
                 'rules' => [
@@ -64,7 +66,7 @@ class AdminController extends Controller
                         'roles' => ['userPermissions'],
                     ],
                 ],
-            ],
+            ],*/
         ];
     }
 
@@ -102,15 +104,15 @@ class AdminController extends Controller
      */
     public function actionCreate()
     {
-        $model = new User();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+        $model = new UserForm();
+        if ($model->load(Yii::$app->request->post())) {
+            if ($user = $model->signup()) {
+                return $this->redirect(['view', 'id' => $user->id]);
+            }
         }
+        return $this->render($this->module->getCustomView('create'), [
+            'model' => $model,
+        ]);
     }
 
     /**
@@ -121,15 +123,27 @@ class AdminController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        $user = $this->findModel($id);
+        $model = new UserForm();
+        $model->attributes = $user->attributes;
+        $model->attributes = $user->userProfile->attributes;
+        $model->password = null;
+        $model->password_repeat = null;
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+        if ($model->load(Yii::$app->request->post())){
+            $user->attributes = $model->attributes;
+            $user_profile = $user->userProfile;
+            $user_profile->attributes = $model->attributes;
+
+            if ($model->password) {
+                $user->setPassword($model->password);
+            }
+            if ($user->save()&&$user_profile->save())
+                return $this->redirect(['view', 'id' => $model->id]);
         }
+        return $this->render($this->module->getCustomView('update'), [
+            'model' => $model,
+        ]);
     }
 
     /**
@@ -178,5 +192,48 @@ class AdminController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    public function actionProfile()
+    {
+        $model = Yii::$app->user->identity->userProfile;
+        if ($model->load($_POST) && $model->save()) {
+            Yii::$app->session->setFlash('alert', [
+                'options'=>['class'=>'alert-success'],
+                'body'=>Yii::t('backend', 'Your profile has been successfully saved', [], $model->locale)
+            ]);
+            return $this->refresh();
+        }
+
+        if (Yii::$app->request->isAjax) {
+            return $this->renderAjax($this->module->getCustomView('_ajaxProfile'), ['model' => $model]);
+        }
+        return $this->render($this->module->getCustomView('profile'), ['model' => $model]);
+    }
+
+    public function actionAccount()
+    {
+        $user = Yii::$app->user->identity;
+        $model = new AccountForm();
+        $model->username = $user->username;
+        $model->email = $user->email;
+        if ($model->load($_POST) && $model->validate()) {
+            $user->username = $model->username;
+            $user->email = $model->email;
+            if ($model->password) {
+                $user->setPassword($model->password);
+            }
+            $user->save();
+            Yii::$app->session->setFlash('alert', [
+                'options'=>['class'=>'alert-success'],
+                'body'=>Yii::t('backend', 'Your account has been successfully saved')
+            ]);
+            return $this->refresh();
+        }
+
+        if (Yii::$app->request->isAjax) {
+            return $this->renderAjax($this->module->getCustomView('_ajaxAccount'), ['model' => $model]);
+        }
+        return $this->render($this->module->getCustomView('account'), ['model' => $model]);
     }
 }

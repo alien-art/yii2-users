@@ -23,7 +23,7 @@ class RbacController extends Controller
                     'delete' => ['post'],
                 ],
             ],
-            'access' => [
+            /*'access' => [
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
@@ -32,7 +32,7 @@ class RbacController extends Controller
                         'roles' => ['rbacManage'],
                     ],
                 ],
-            ],
+            ],*/
         ];
     }
 
