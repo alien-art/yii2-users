@@ -3,10 +3,10 @@
 namespace alien\users\models;
 
 use Yii;
-use backend\modules\user\components\Helper;
+use alien\users\components\Helper;
 use yii\caching\TagDependency;
-use backend\modules\user\components\RouteRule;
-use backend\modules\user\components\Configs;
+use alien\users\components\RouteRule;
+use alien\users\components\Configs;
 use yii\helpers\VarDumper;
 use Exception;
 
@@ -101,7 +101,7 @@ class Route extends \yii\base\Object
             $this->setActiveApp($value);
             $routes = array_merge($routes, $this->getAppRoutes());
         }
-        
+        $this->setActiveApp($app->id);
         Yii::$app = $app;
         $exists = [];
         foreach (array_keys($manager->getPermissions()) as $name) {
@@ -337,7 +337,21 @@ class Route extends \yii\base\Object
         $config = \yii\helpers\ArrayHelper::merge(
                         require(__DIR__ . '/../../../../common/config/base.php'),
                         require(__DIR__ . '/../../../../common/config/web.php'));
-        switch ($app_name)
+        if($app_name == 'storage')
+        {
+            $config = require(__DIR__ . '/../../../../storage/config/base.php');
+            new yii\web\Application($config);
+        }
+        else
+        {
+            $config = \yii\helpers\ArrayHelper::merge(
+                $config,
+                require(__DIR__ . "/../../../../$app_name/config/base.php"),
+                require(__DIR__ . "/../../../../$app_name/config/web.php")
+            );
+            new yii\web\Application($config);
+        }
+        /*switch ($app_name)
         {
             case 'frontend':
                    $config = \yii\helpers\ArrayHelper::merge(
@@ -369,6 +383,6 @@ class Route extends \yii\base\Object
                     );
                     new yii\web\Application($config);
                     break;    
-        }
+        }*/
     }    
 }

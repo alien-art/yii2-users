@@ -36,7 +36,7 @@ class RouteController extends Controller
     public function actionIndex()
     {
         $model = new Route();
-        return $this->render($this->module->getCustomView('RouteIndex'), ['routes' => $model->getRoutes()]);
+        return $this->render($this->module->getCustomView('index'), ['routes' => $model->getRoutes()]);
     }
 
     /**
