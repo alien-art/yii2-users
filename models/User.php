@@ -17,10 +17,8 @@ use yii\helpers\ArrayHelper;
  * @property string $password_hash
  * @property string $password_reset_token
  * @property string $email
- * @property string $photo
  * @property string $auth_key
  * @property integer $status
- * @property integer $sex
  * @property integer $created_at
  * @property integer $updated_at
  * @property string $password write-only password
@@ -72,11 +70,10 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             [['email'], 'required', 'except' => ['oauth']],
             [['username'], 'required'],
-            [['username', 'photo', 'email', 'auth_key', 'password_hash'], 'string', 'max' => 255],
-            [['created_at', 'updated_at', 'status', 'sex'], 'integer'],
+            [['username', 'email', 'auth_key', 'password_hash'], 'string', 'max' => 255],
+            [['created_at', 'updated_at', 'status'], 'integer'],
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => [self::STATUS_NEW, self::STATUS_ACTIVE, self::STATUS_BLOCKED]],
-            ['sex', 'in', 'range' => [self::SEX_MALE, self::SEX_FEMALE]]
         ];
     }
 
@@ -98,9 +95,7 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             'id' => 'ID',
             'username' => Yii::t('users', 'USERNAME'),
-            'photo' => Yii::t('users', 'PHOTO'),
             'email' => Yii::t('users', 'EMAIL'),
-            'sex' => Yii::t('users', 'SEX'),
             'status' => Yii::t('users', 'STATUS'),
             'created_at' => Yii::t('users', 'CREATED_AT'),
             'updated_at' => Yii::t('users', 'UPDATED_AT'),

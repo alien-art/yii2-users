@@ -1,8 +1,8 @@
 <?php
 namespace alien\users\models\forms;
 
-use common\models\User;
-use common\models\UserProfile;
+use alien\users\models\User;
+use alien\users\models\UserProfile;
 use yii\base\Model;
 use Yii;
 
