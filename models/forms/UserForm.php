@@ -36,12 +36,12 @@ class UserForm extends Model
             [['username', 'rempoint_id', 'firstname', 'middlename', 'lastname'], 'required'],
             [['rempoint_id', 'id', 'status'], 'integer'],
             [['username','avatar_path','firstname', 'middlename', 'lastname'], 'string', 'min' => 2, 'max' => 255],
-            ['username', 'unique', 'targetClass' => '\budyaga\users\models\User', 'message' => Yii::t('users', 'THIS_USERNAME_ALREADY_TAKEN')],
+            ['username', 'unique', 'targetClass' => '\alien\users\models\User', 'message' => Yii::t('users', 'THIS_USERNAME_ALREADY_TAKEN')],
 
             ['email', 'filter', 'filter' => 'trim'],
             ['email', 'required'],
             ['email', 'email'],
-            ['email', 'unique', 'targetClass' => '\budyaga\users\models\User', 'message' => Yii::t('users', 'THIS_EMAIL_ALREADY_TAKEN')],
+            ['email', 'unique', 'targetClass' => '\alien\users\models\User', 'message' => Yii::t('users', 'THIS_EMAIL_ALREADY_TAKEN')],
             ['sex', 'in', 'range' => [User::SEX_MALE, User::SEX_FEMALE]],
             ['photo', 'safe'],
 
