@@ -306,4 +306,9 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return AuthItem::find()->where(['not in', 'name', ArrayHelper::getColumn($this->assignedRules, 'name')])->all();
     }
+
+    public function getUserProfile()
+    {
+        return $this->hasOne(UserProfile::className(), ['user_id' => 'id']);
+    }
 }

@@ -22,7 +22,6 @@ class UserForm extends Model
     public $middlename;
     public $lastname;
     public $locale;
-    public $rempoint_id;
     public $status;
     public $avatar_path;
 
@@ -33,8 +32,8 @@ class UserForm extends Model
     {
         return [
             ['username', 'filter', 'filter' => 'trim'],
-            [['username', 'rempoint_id', 'firstname', 'middlename', 'lastname'], 'required'],
-            [['rempoint_id', 'id', 'status'], 'integer'],
+            [['username', 'firstname', 'middlename', 'lastname'], 'required'],
+            [['id', 'status'], 'integer'],
             [['username','avatar_path','firstname', 'middlename', 'lastname'], 'string', 'min' => 2, 'max' => 255],
             ['username', 'unique', 'targetClass' => '\alien\users\models\User', 'message' => Yii::t('users', 'THIS_USERNAME_ALREADY_TAKEN')],
 
@@ -70,7 +69,6 @@ class UserForm extends Model
             'lastname' => Yii::t('common', 'Lastname'),
             'locale' => Yii::t('common', 'Locale'),
             'avatar_path' => Yii::t('common', 'Avatar Path'),
-            'rempoint_id' => Yii::t('common', 'Rempoint'),
         ];
     }
 
