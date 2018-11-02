@@ -6,6 +6,8 @@ use Yii;
 
 class Module extends \yii\base\Module
 {
+    public $alias = '@alien';
+
     public $controllerNamespace = 'alien\users\controllers';
 
     public $userPhotoUrl = '';
@@ -22,11 +24,16 @@ class Module extends \yii\base\Module
     {
         parent::init();
 
+        $this->setAliases([
+            $this->alias => __DIR__,
+        ]);
+
         self::registerTranslations();
     }
 
     public static function registerTranslations()
     {
+        // set alias
         if (!isset(Yii::$app->i18n->translations['users']) && !isset(Yii::$app->i18n->translations['users/*'])) {
             Yii::$app->i18n->translations['users'] = [
                 'class' => 'yii\i18n\PhpMessageSource',
