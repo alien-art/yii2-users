@@ -28,7 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'sex',
                 'value' => function($data) {
-                    return User::getSexArray()[$data->sex];
+                    return \alien\users\models\UserProfile::getSexArray()[$data->userProfile->sex];
                 }
             ],
             [

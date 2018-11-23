@@ -29,12 +29,9 @@ class User extends ActiveRecord implements IdentityInterface
     const STATUS_ACTIVE = 2;
     const STATUS_BLOCKED = 3;
 
-    const SEX_MALE = 1;
-    const SEX_FEMALE = 2;
-
     public function getDefaultPhoto()
     {
-        return ($this->sex == self::SEX_MALE) ? 'male' : 'female';
+        return ($this->sex == UserProfile::SEX_MALE) ? 'male' : 'female';
     }
 
     /**
@@ -43,14 +40,6 @@ class User extends ActiveRecord implements IdentityInterface
     public static function tableName()
     {
         return '{{%user}}';
-    }
-
-    public static function getSexArray()
-    {
-        return [
-            self::SEX_MALE => Yii::t('users', 'SEX_MALE'),
-            self::SEX_FEMALE => Yii::t('users', 'SEX_FEMALE'),
-        ];
     }
 
     public static function getStatusArray()
