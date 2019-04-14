@@ -2,6 +2,7 @@
 
 namespace alien\users\controllers;
 
+use alien\users\models\forms\AssignmentForm;
 use Yii;
 use alien\users\models\Route;
 use yii\web\Controller;
@@ -18,15 +19,6 @@ class RouteController extends Controller
     public function behaviors()
     {
         return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'create' => ['post'],
-                    'assign' => ['post'],
-                    'remove' => ['post'],
-                    'refresh' => ['post'],
-                ],
-            ],
         ];
     }
     /**
@@ -36,60 +28,20 @@ class RouteController extends Controller
     public function actionIndex()
     {
         $model = new Route();
-        return $this->render($this->module->getCustomView('index'), ['routes' => $model->getRoutes()]);
-    }
+        $modelForm = new AssignmentForm();
 
-    /**
-     * Creates a new AuthItem model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
-    public function actionCreate()
-    {
-        Yii::$app->getResponse()->format = 'json';
-        $routes = Yii::$app->getRequest()->post('route', '');
-        $routes = preg_split('/\s*,\s*/', trim($routes), -1, PREG_SPLIT_NO_EMPTY);
-        $model = new Route();
-        $model->addNew($routes);
-        return $model->getRoutes();
-    }
+        if ($modelForm->load(Yii::$app->request->post())) {
+            if($modelForm->action == 'revoke') {
+                $model->remove($modelForm->assigned);
+            }
+            else if($modelForm->action == 'assign')
+            {
+                $model->addNew($modelForm->unassigned);
+            }
+            return $this->redirect(Yii::$app->request->url);
+        }
 
-    /**
-     * Assign routes
-     * @return array
-     */
-    public function actionAssign()
-    {
-        $routes = Yii::$app->getRequest()->post('routes', []);
-        $titles = Yii::$app->getRequest()->post('titles', []);
-        $model = new Route();
-        $model->addNew($routes, $titles);
-        Yii::$app->getResponse()->format = 'json';
-        return $model->getRoutes();
-    }
-
-    /**
-     * Remove routes
-     * @return array
-     */
-    public function actionRemove()
-    {
-        $routes = Yii::$app->getRequest()->post('routes', []);
-        $model = new Route();
-        $model->remove($routes);
-        Yii::$app->getResponse()->format = 'json';
-        return $model->getRoutes();
-    }
-
-    /**
-     * Refresh cache
-     * @return type
-     */
-    public function actionRefresh()
-    {
-        $model = new Route();
-        $model->invalidate();
-        Yii::$app->getResponse()->format = 'json';
-        return $model->getRoutes();
+        $routes = $model->getRoutes();
+        return $this->render($this->module->getCustomView('index'), ['modelForm' => $modelForm, 'routes' => $routes]);
     }
 }

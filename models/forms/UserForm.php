@@ -41,7 +41,7 @@ class UserForm extends Model
             ['email', 'required'],
             ['email', 'email'],
             ['email', 'unique', 'targetClass' => '\alien\users\models\User', 'message' => Yii::t('users', 'THIS_EMAIL_ALREADY_TAKEN')],
-            ['sex', 'in', 'range' => [User::SEX_MALE, User::SEX_FEMALE]],
+            ['sex', 'in', 'range' => [UserProfile::SEX_MALE, UserProfile::SEX_FEMALE]],
             ['photo', 'safe'],
 
             [['firstname', 'middlename', 'lastname'], 'string', 'max' => 255],

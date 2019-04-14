@@ -1,9 +1,9 @@
 <?php
 
+use yii\bootstrap\ActiveForm;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
-use yii\helpers\Json;
-use alien\users\AnimateAsset;
-use yii\web\YiiAsset;
+use alien\users\UsersAsset;
 
 /* @var $this yii\web\View */
 /* @var $routes [] */
@@ -13,60 +13,53 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('users', 'USERS'), 'url' => 
 $this->params['breadcrumbs'][] = ['label' => Yii::t('users', 'Access rights management'), 'url' => ['/user/rbac/index']];
 $this->params['breadcrumbs'][] = $this->title;
 
-AnimateAsset::register($this);
-YiiAsset::register($this);
-$opts = Json::htmlEncode([
-    'routes' => $routes
-]);
-$this->registerJs("var _opts = {$opts};");
-$this->registerJs($this->render('_script.js'));
-$animateIcon = ' <i class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></i>';
+UsersAsset::register($this);
 ?>
 <div class="row">
-    <div class="col-sm-11">
-        <div class="input-group">
-            <input id="inp-route" type="text" class="form-control"
-                   placeholder="<?= Yii::t('backend', 'New route(s)') ?>">
-            <span class="input-group-btn">
-                <?= Html::a(Yii::t('backend', 'Add') . $animateIcon, ['create'], [
-                    'class' => 'btn btn-success',
-                    'id' => 'btn-new'
-                ]) ?>
-            </span>
+    <h4><?= Html::encode($this->title) ?></h4>
+
+    <div class="permission-children-editor" style="width: 100%;">
+        <?php $form = ActiveForm::begin(['options' => ['style' => "width: 100%;"]]); ?>
+        <div class="col-xl-4 col-xs-12 children-list" style="float:left">
+            <div class="panel panel-info">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <input type="text" class="form-control listFilter"
+                               placeholder="<?= Yii::t('users', 'FILTER_PLACEHOLDER') ?>">
+                    </div>
+                    <?= $form->field($modelForm, 'assigned')->dropDownList(
+                        $routes['assigned'],
+                        ['multiple' => 'multiple', 'size' => '20'])
+                    ?>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
-<p>&nbsp;</p>
-<div class="row">
-    <div class="col-sm-5">
-        <div class="input-group">
-            <input class="form-control search" data-target="avaliable"
-                   placeholder="<?= Yii::t('backend', 'Search for avaliable') ?>">
-            <span class="input-group-btn">
-                <?= Html::a('<span class="glyphicon glyphicon-refresh"></span>', ['refresh'], [
-                    'class' => 'btn btn-default',
-                    'id' => 'btn-refresh'
-                ]) ?>
-            </span>
+        <div class="text-center" style="float:left; margin-top: 15%;">
+            <div class="panel panel-info">
+                <div class="panel-body">
+                    <button class="btn btn-success" type="submit" name="AssignmentForm[action]" value="assign"><span
+                                class="ion-arrow-left-c" data-pack="default"></span></button>
+                    <button class="btn btn-success" type="submit" name="AssignmentForm[action]" value="revoke"><span
+                                class="ion-arrow-right-c" data-pack="default"></span></button>
+                </div>
+            </div>
         </div>
-        <select multiple size="20" class="form-control list" data-target="avaliable"></select>
-    </div>
-    <div class="col-sm-1">
-        <br><br>
-        <?= Html::a('&gt;&gt;' . $animateIcon, ['assign'], [
-            'class' => 'btn btn-success btn-assign',
-            'data-target' => 'avaliable',
-            'title' => Yii::t('backend', 'Assign')
-        ]) ?><br><br>
-        <?= Html::a('&lt;&lt;' . $animateIcon, ['remove'], [
-            'class' => 'btn btn-danger btn-assign',
-            'data-target' => 'assigned',
-            'title' => Yii::t('backend', 'Remove')
-        ]) ?>
-    </div>
-    <div class="col-sm-5">
-        <input class="form-control search" data-target="assigned"
-               placeholder="<?= Yii::t('backend', 'Search for assigned') ?>">
-        <select multiple size="20" class="form-control list" data-target="assigned"></select>
+
+
+        <div class="col-xl-4 col-xs-12 children-list" style="float:left">
+            <div class="panel panel-info">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <input type="text" class="form-control listFilter"
+                               placeholder="<?= Yii::t('users', 'FILTER_PLACEHOLDER') ?>">
+                    </div>
+                    <?= $form->field($modelForm, 'unassigned')->dropDownList(
+                        $routes['avaliable'],
+                        ['multiple' => 'multiple', 'size' => '20'])
+                    ?>
+                </div>
+            </div>
+        </div>
+        <?php ActiveForm::end(); ?>
     </div>
 </div>

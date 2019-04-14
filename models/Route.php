@@ -14,7 +14,7 @@ use Exception;
  * Description of Route
  *
  * @author Misbahul D Munir <misbahuldmunir@gmail.com>
- * @since 1.0
+ * @since  1.0
  */
 class Route extends \yii\base\Object
 {
@@ -22,15 +22,16 @@ class Route extends \yii\base\Object
     const MODULE_TYPE = 1;
     const CONTROLLER_TYPE = 2;
     const ACTION_TYPE = 3;
-    
-    protected $excluded = ['gii','debug'];
+
+    protected $excluded = ['gii', 'debug'];
 
     /**
      * Assign or remove items
+     *
      * @param array $routes
      * @return array
      */
-    public function addNew($routes, $titles)
+    public function addNew($routes, $titles = null)
     {
         $manager = Yii::$app->getAuthManager();
         $i = 0;
@@ -38,7 +39,7 @@ class Route extends \yii\base\Object
             try {
                 $r = explode('&', $route);
                 $item = $manager->createPermission('/' . trim($route, '/'));
-                $item->description = $titles[$i];
+                $item->description = $titles[$i] ?? $route;
                 if (count($r) > 1) {
                     $action = '/' . trim($r[0], '/');
                     if (($itemAction = $manager->getPermission($action)) === null) {
@@ -59,6 +60,7 @@ class Route extends \yii\base\Object
                     $manager->add($item);
                 }
             } catch (Exception $exc) {
+                var_dump($exc->getMessage());
                 Yii::error($exc->getMessage(), __METHOD__);
             }
             $i++;
@@ -68,6 +70,7 @@ class Route extends \yii\base\Object
 
     /**
      * Assign or remove items
+     *
      * @param array $routes
      * @return array
      */
@@ -87,17 +90,17 @@ class Route extends \yii\base\Object
 
     /**
      * Get avaliable and assigned routes
+     *
      * @return array
      */
     public function getRoutes()
     {
         $manager = Yii::$app->getAuthManager();
-        
+
         $app = Yii::$app;
         $apps = $this->getAppList();
         $routes = [];
-        foreach ($apps as $value)
-        {
+        foreach ($apps as $value) {
             $this->setActiveApp($value);
             $routes = array_merge($routes, $this->getAppRoutes());
         }
@@ -108,17 +111,18 @@ class Route extends \yii\base\Object
             if ($name[0] !== '/') {
                 continue;
             }
-            $exists[$name] = $routes[$name];
+            $exists[$name] = $routes[$name] ?? $name;
             unset($routes[$name]);
         }
-        return[
+        return [
             'avaliable' => $routes,
-            'assigned' => $exists
+            'assigned'  => $exists
         ];
     }
 
     /**
      * Get list of application routes
+     *
      * @return array
      */
     public function getAppRoutes($module = null)
@@ -145,8 +149,9 @@ class Route extends \yii\base\Object
 
     /**
      * Get route(s) recrusive
+     *
      * @param \yii\base\Module $module
-     * @param array $result
+     * @param array            $result
      */
     protected function getRouteRecrusive($module, &$result)
     {
@@ -154,17 +159,17 @@ class Route extends \yii\base\Object
         Yii::beginProfile($token, __METHOD__);
         try {
             foreach ($module->getModules() as $id => $child) {
-                if ((($child = $module->getModule($id)) !== null)&&(!in_array($id, $this->excluded))) {
+                if ((($child = $module->getModule($id)) !== null) && (!in_array($id, $this->excluded))) {
                     $this->getRouteRecrusive($child, $result);
                 }
             }
 
-            $all = '/'.Yii::$app->id.'/'.$module->uniqueId.(($module->uniqueId != '')?'/*':'*');
+            $all = '/' . Yii::$app->id . '/' . $module->uniqueId . (($module->uniqueId != '') ? '/*' : '*');
             $result[$all] = $all;
             $descr = $this->getDescription($module, '', $this::MODULE_TYPE);
-            if($descr != null)
+            if ($descr != null)
                 $result[$all] = $descr;
-            
+
             foreach ($module->controllerMap as $id => $type) {
                 $this->getControllerActions($type, $id, $module, $result);
             }
@@ -181,10 +186,11 @@ class Route extends \yii\base\Object
 
     /**
      * Get list controller under module
+     *
      * @param \yii\base\Module $module
-     * @param string $namespace
-     * @param string $prefix
-     * @param mixed $result
+     * @param string           $namespace
+     * @param string           $prefix
+     * @param mixed            $result
      * @return mixed
      */
     protected function getControllerFiles($module, $namespace, $prefix, &$result)
@@ -220,10 +226,11 @@ class Route extends \yii\base\Object
 
     /**
      * Get list action of controller
-     * @param mixed $type
-     * @param string $id
+     *
+     * @param mixed            $type
+     * @param string           $id
      * @param \yii\base\Module $module
-     * @param string $result
+     * @param string           $result
      */
     protected function getControllerActions($type, $id, $module, &$result)
     {
@@ -233,7 +240,7 @@ class Route extends \yii\base\Object
             /* @var $controller \yii\base\Controller */
             $controller = Yii::createObject($type, [$id, $module]);
             $this->getActionRoutes($controller, $result);
-            $all = '/'.Yii::$app->id."/{$controller->uniqueId}/*";
+            $all = '/' . Yii::$app->id . "/{$controller->uniqueId}/*";
             $result[$all] = $all;
         } catch (\Exception $exc) {
             Yii::error($exc->getMessage(), __METHOD__);
@@ -243,8 +250,9 @@ class Route extends \yii\base\Object
 
     /**
      * Get route of action
+     *
      * @param \yii\base\Controller $controller
-     * @param array $result all controller action.
+     * @param array                $result all controller action.
      */
     protected function getActionRoutes($controller, &$result)
     {
@@ -253,7 +261,7 @@ class Route extends \yii\base\Object
         try {
             $prefix = '/' . $controller->uniqueId . '/';
             foreach ($controller->actions() as $id => $value) {
-                $result['/'.Yii::$app->id.$prefix . $id] = '/'.Yii::$app->id.$prefix . $id;
+                $result['/' . Yii::$app->id . $prefix . $id] = '/' . Yii::$app->id . $prefix . $id;
             }
             $class = new \ReflectionClass($controller);
             foreach ($class->getMethods() as $method) {
@@ -261,11 +269,11 @@ class Route extends \yii\base\Object
                 if ($method->isPublic() && !$method->isStatic() && strpos($name, 'action') === 0 && $name !== 'actions') {
                     $name = strtolower(preg_replace('/(?<![A-Z])[A-Z]/', ' \0', substr($name, 6)));
                     $id = $prefix . ltrim(str_replace(' ', '-', $name), '-');
-                    $id = '/'.Yii::$app->id.$id;
+                    $id = '/' . Yii::$app->id . $id;
                     $result[$id] = $id;
-                    
+
                     $descr = $this->getDescription($controller, $method->getName(), $this::ACTION_TYPE);
-                    if($descr != null)
+                    if ($descr != null)
                         $result[$id] = $descr;
                 }
             }
@@ -294,56 +302,50 @@ class Route extends \yii\base\Object
             Yii::$app->getAuthManager()->add(new RouteRule());
         }
     }
-    
-    protected function getDescription ($class, $method, $type) 
-    {
-        $class  = new \ReflectionClass( $class );
-        
-        if ($type == $this::ACTION_TYPE)
-        {
-            $method = $class->getMethod( $method );
-            $param  = $method->getParameters();
-            $doc    = $method->getDocComment();
-        }
-        if($type == $this::CONTROLLER_TYPE)
-            $doc = $class->getDocComment();
-        
-        if($type == $this::MODULE_TYPE)
-        {
-            $doc = $class->getDocComment();
-        }    
-        //Разбираем PHPdoc
-        preg_match_all( '/@(\bdescription\ )(.+)\./is', $doc, $arr );
 
-        return ($arr[2][0] != null)?mb_strtoupper(Yii::t('common', Yii::$app->id))." - ".Yii::t('routes',$arr[2][0]): null;
+    protected function getDescription($class, $method, $type)
+    {
+        $class = new \ReflectionClass($class);
+
+        if ($type == $this::ACTION_TYPE) {
+            $method = $class->getMethod($method);
+            $param = $method->getParameters();
+            $doc = $method->getDocComment();
+        }
+        if ($type == $this::CONTROLLER_TYPE)
+            $doc = $class->getDocComment();
+
+        if ($type == $this::MODULE_TYPE) {
+            $doc = $class->getDocComment();
+        }
+        //Разбираем PHPdoc
+        preg_match_all('/@(\bdescription\ )(.+)\./is', $doc, $arr);
+
+        return ($arr[2][0] != null) ? mb_strtoupper(Yii::t('common', Yii::$app->id)) . " - " . Yii::t('routes', $arr[2][0]) : null;
     }
-    
+
     protected function getAppList()
     {
         $i = 0;
-        $app = array();
-        do
-        {
-            if(env('APP_'.$i)!= null)
-                $app[] = env('APP_'.$i);
+        $app = [];
+        do {
+            if (env('APP_' . $i) != null) {
+                $app[] = env('APP_' . $i);
+            }
             $i++;
-        }
-        while (env('APP_'.$i)!= null);
-        return $app;         
+        } while (env('APP_' . $i) != null);
+        return $app;
     }
-    
+
     protected function setActiveApp($app_name)
     {
         $config = \yii\helpers\ArrayHelper::merge(
-                        require(__DIR__ . '/../../../../common/config/base.php'),
-                        require(__DIR__ . '/../../../../common/config/web.php'));
-        if($app_name == 'storage')
-        {
+            require(__DIR__ . '/../../../../common/config/base.php'),
+            require(__DIR__ . '/../../../../common/config/web.php'));
+        if ($app_name == 'storage') {
             $config = require(__DIR__ . '/../../../../storage/config/base.php');
             new yii\web\Application($config);
-        }
-        else
-        {
+        } else {
             $config = \yii\helpers\ArrayHelper::merge(
                 $config,
                 require(__DIR__ . "/../../../../$app_name/config/base.php"),
@@ -351,38 +353,5 @@ class Route extends \yii\base\Object
             );
             new yii\web\Application($config);
         }
-        /*switch ($app_name)
-        {
-            case 'frontend':
-                   $config = \yii\helpers\ArrayHelper::merge(
-                        $config,   
-                        require(__DIR__ . '/../../../../frontend/config/base.php'),
-                        require(__DIR__ . '/../../../../frontend/config/web.php')
-                    );
-                    new yii\web\Application($config);
-                    break;
-            case 'privatezone':
-                    //$config1 = require(__DIR__ . '/../../../../privatezone/config/base.php');
-                    $config = \yii\helpers\ArrayHelper::merge(
-                        $config,
-                        require(__DIR__ . '/../../../../privatezone/config/base.php'),
-                        require(__DIR__ . '/../../../../privatezone/config/web.php')
-                    );
-                    new yii\web\Application($config);
-                    break;
-            case 'storage':
-                   $config = require(__DIR__ . '/../../../../storage/config/base.php');
-                   new yii\web\Application($config);
-                   break;
-            default: //$this->active_app = Yii::$app; 
-                   // $config = require(__DIR__ . '/../../../../backend/config/base.php');
-                    $config = \yii\helpers\ArrayHelper::merge(
-                        $config,    
-                        require(__DIR__ . '/../../../../backend/config/base.php'),
-                        require(__DIR__ . '/../../../../backend/config/web.php')
-                    );
-                    new yii\web\Application($config);
-                    break;    
-        }*/
-    }    
+    }
 }
